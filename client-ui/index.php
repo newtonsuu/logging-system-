@@ -93,38 +93,38 @@
 		</div>
 		<div class="form_wrap">
 			<div class="form_1 data_info">
-				<h2>Signin Info</h2>
+				<h2>Personal Info</h2>
 				<form>
 					<div class="form_container">
 						<div class="input_wrap">
-							<label for="email">Email Address</label>
+							<label for="email">First Name</label>
 							<input type="text" name="Email Address" class="input" id="email">
 						</div>
 						<div class="input_wrap">
-							<label for="password">Password</label>
-							<input type="password" name="password" class="input" id="password">
+							<label for="password">Middle Name</label>
+							<input type="text" name="password" class="input" id="password">
 						</div>
 						<div class="input_wrap">
-							<label for="confirm_password">Confirm Password</label>
-							<input type="password" name="confirm password" class="input" id="confirm_password">
+							<label for="confirm_password">Last Name</label>
+							<input type="text" name="confirm password" class="input" id="confirm_password">
 						</div>
 					</div>
 				</form>
 			</div>
 			<div class="form_2 data_info" style="display: none;">
-				<h2>Personal Info</h2>
+				<h2>Logging Info</h2>
 				<form>
 					<div class="form_container">
 						<div class="input_wrap">
-							<label for="user_name">User Name</label>
+							<label for="user_name">Adress</label>
 							<input type="text" name="User Name" class="input" id="user_name">
 						</div>
 						<div class="input_wrap">
-							<label for="first_name">First Name</label>
+							<label for="first_name">Time Arrived</label>
 							<input type="text" name="First Name" class="input" id="first_name">
 						</div>
 						<div class="input_wrap">
-								<label for="last_name">Last Name</label>
+								<label for="last_name">Time Departed</label>
 								<input type="text" name="Last Name" class="input" id="last_name">
 							</div>
 						</div>
