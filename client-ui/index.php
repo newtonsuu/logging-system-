@@ -35,18 +35,19 @@
 			}
 
 			function processRecognizedSpeech(recognized_speech) {
-				//alert("Is the data correct? " + recognized_speech);
+				document.getElementById('a1').value = reconized_speech;
+				alert("Is the data correct? " + recognized_speech);
 				if(true){
 					msg.push(recognized_speech);
 				}
 				else{
 					
 				}
-				//document.querySelector("#recognized_speech").innerHTML = recognized_speech;
+				document.querySelector("#recognized_speech").innerHTML = recognized_speech;
 				document.querySelector("#recognized_speech").innerHTML = msg;
-				//console.log("command: " + recognized_speech + " Jericho");
+				console.log("command: " + recognized_speech + " Jericho");
 
-				/*switch(recognized_speech) {`1
+				switch(recognized_speech) {
 					case "hello":
 						document.querySelector("#response_speech").innerHTML = "Hi!";
 						break;
@@ -60,7 +61,7 @@
 						break;
 					default:
 						console.log("command not recognized: " + recognized_speech);
-				}*/
+				}
 			}
 
 		</script>
@@ -97,8 +98,14 @@
 				<form>
 					<div class="form_container">
 						<div class="input_wrap">
-							<label for="email">First Name</label>
-							<input type="text" name="Email Address" class="input" id="email">
+						questionaire
+						</div>
+						<div id="a1" class="input_wrap">
+						Answers here
+						</div>
+						<!-- <div class="input_wrap">
+							<label for="first name">First Name</label>
+							<input type="text" name="First Name" class="input" id="speech">
 						</div>
 						<div class="input_wrap">
 							<label for="password">Middle Name</label>
@@ -107,7 +114,7 @@
 						<div class="input_wrap">
 							<label for="confirm_password">Last Name</label>
 							<input type="text" name="confirm password" class="input" id="confirm_password">
-						</div>
+						</div>  -->
 					</div>
 				</form>
 			</div>
