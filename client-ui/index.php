@@ -5,7 +5,9 @@
 		<script type="module" src="js/ionicons.esm.js"></script>
 		<script type="module" src="js/mods.js"></script>
 		<script>
-			const msg=[];
+			// const msg=[];
+			var current_step = 0; 
+			var current_input_value = "";
 			window.onload = function(){
 				startSpeechRecognition();
 			};
@@ -25,6 +27,7 @@
 				speechRecognition.onresult = (event) => {
 					for (let i = event.resultIndex; i < event.results.length; ++i) {
 						if (event.results[i].isFinal) {
+							//alert(event.results[i][0].transcript.trim());
 							processRecognizedSpeech(event.results[i][0].transcript.trim());
 						}
 					}
@@ -35,19 +38,92 @@
 			}
 
 			function processRecognizedSpeech(recognized_speech) {
-				document.getElementById('a1').value = reconized_speech;
-				alert("Is the data correct? " + recognized_speech);
-				if(true){
-					msg.push(recognized_speech);
-				}
-				else{
+				console.log("current step: " + current_step);
+				console.log("recognized speech: " + recognized_speech)
+				// document.querySelector('#a1').innerHTML = recognized_speech;
+				//alert("Is the data correct? " + recognized_speech);
+				// if(true){
+				// 	msg.push(recognized_speech);
+				// }
+				// else{
 					
-				}
-				document.querySelector("#recognized_speech").innerHTML = recognized_speech;
-				document.querySelector("#recognized_speech").innerHTML = msg;
-				console.log("command: " + recognized_speech + " Jericho");
+				// z
+				// document.querySelector("#recognized_speech").innerHTML = msg;
+				// document.querySelector("#recognized_speech").innerHTML = recognized_speech;
+				// console.log("command: " + recognized_speech);
+				
+				
 
 				switch(recognized_speech) {
+					case "start":
+						if(current_step == 0){
+							current_step = 1;
+							console.log("Starting form fill up");
+							document.querySelector("#instruction").innerHTML = "Started form fill up. Say 'next' to proceed.";
+						}
+						break;
+					case "end":
+						location.reload();
+						break;
+					case "next":
+						if(current_step == 1){
+							current_step = 2;
+							document.querySelector(".form_1_btns .btn_next").click();
+							document.querySelector("#instruction").innerHTML = "Please, say your address.";
+						}
+						else if(current_step == 8){
+							current_step = 9;
+							document.querySelector(".form_2_btns .btn_next").click();
+							document.querySelector("#instruction").innerHTML = "Please, say your Age.";
+						}
+						break;
+					case "back":
+						if(current_step == 8){
+							current_step = 1;
+							document.querySelector(".form_2_btns .btn_back").click();
+							document.querySelector("#instruction").innerHTML = "Started form fill up. Say 'next' to proceed.";
+						}
+					case "yes":
+						if(current_step == 3){
+							current_step = 4;
+							document.querySelector("#address").value = current_input_value;
+							document.querySelector("#instruction").innerHTML = "Please, say your time of arrival.";
+						}
+						else if(current_step == 5){
+							current_step = 6;
+							document.querySelector("#arrived").value = current_input_value;
+							document.querySelector("#instruction").innerHTML = "Please, say your time of departure.";
+						}
+						else if(current_step == 7){
+							current_step = 8;
+							document.querySelector("#departed").value = current_input_value;
+							document.querySelector("#instruction").innerHTML = "Please, Say 'next' to proceed or say 'back' to return";
+						}
+						if(current_step == 9){
+							current_step = 10;
+							document.querySelector("#age").value = current_input_value;
+							document.querySelector("#instruction").innerHTML = "Please, say your firstname.";
+						}
+						break;
+					case "no":
+						if(current_step == 3){
+							current_step = 2;
+							document.querySelector("#instruction").innerHTML = "Please, say your address.";
+						}
+						else if(current_step == 5){
+							current_step = 4;
+							document.querySelector("#instruction").innerHTML = "Please, say your time of arrival.";
+						}
+						else if(current_step == 7){
+							current_step = 6;
+							document.querySelector("#instruction").innerHTML = "Please, say your time of departure.";
+						}
+						else if(current_step == 9){
+							current_step = 8;
+							document.querySelector("#instruction").innerHTML = "Please, say your age.";
+						}
+						break;
+					
 					case "hello":
 						document.querySelector("#response_speech").innerHTML = "Hi!";
 						break;
@@ -61,15 +137,39 @@
 						break;
 					default:
 						console.log("command not recognized: " + recognized_speech);
+						if(current_step == 2){
+							current_step = 3;
+							current_input_value = recognized_speech;
+							document.querySelector("#instruction").innerHTML = "Your address is " +
+								current_input_value + ". Please say 'yes' to proceed and 'no' to retry.";
+						}
+						else if(current_step == 4){
+							current_step = 5;
+							current_input_value = recognized_speech;
+							document.querySelector("#instruction").innerHTML = "Your arrived time is " +
+								current_input_value + ". Please say 'yes' to proceed and 'no' to retry.";
+						}
+						else if(current_step == 6){
+							current_step = 7;
+							current_input_value = recognized_speech;
+							document.querySelector("#instruction").innerHTML = "Your departed time is " +
+								current_input_value + ". Please say 'yes' to proceed and 'no' to retry.";
+						}
+						if(current_step == 9){
+							current_step = 10;
+							current_input_value = recognized_speech;
+							document.querySelector("#instruction").innerHTML = "Your Age is " +
+								current_input_value + ". Please say 'yes' to proceed and 'no' to retry.";
+						}
 				}
 			}
 
 		</script>
 	</head>
 	<body>
-		<span>Captured: <span id="recognized_speech"></span></span>
+		<!-- <span>Captured: <span id="recognized_speech"></span></span>
 		<br>
-		<span>Question: <span id="response_speech"></span></span>
+		<span>Question: <span id="response_speech"></span></span> -->
 		
 
 	<div class="wrapper">
@@ -96,13 +196,13 @@
 			<div class="form_1 data_info">
 				<h2>Personal Info</h2>
 				<form>
-					<div class="form_container">
+					<!-- <div class="form_container">
 						<div class="input_wrap">
 						questionaire
-						</div>
-						<div id="a1" class="input_wrap">
+						</div> -->
+						<!-- <div id="a1" class="input_wrap">
 						Answers here
-						</div>
+						</div> -->
 						<!-- <div class="input_wrap">
 							<label for="first name">First Name</label>
 							<input type="text" name="First Name" class="input" id="speech">
@@ -115,7 +215,7 @@
 							<label for="confirm_password">Last Name</label>
 							<input type="text" name="confirm password" class="input" id="confirm_password">
 						</div>  -->
-					</div>
+					<!-- </div> -->
 				</form>
 			</div>
 			<div class="form_2 data_info" style="display: none;">
@@ -123,16 +223,16 @@
 				<form>
 					<div class="form_container">
 						<div class="input_wrap">
-							<label for="user_name">Adress</label>
-							<input type="text" name="User Name" class="input" id="user_name">
+							<label for="address">Adress</label>
+							<input type="text" name="Address" class="input" id="address">
 						</div>
 						<div class="input_wrap">
-							<label for="first_name">Time Arrived</label>
-							<input type="text" name="First Name" class="input" id="first_name">
+							<label for="arrived">Time Arrived</label>
+							<input type="text" name="Time Arrived" class="input" id="arrived">
 						</div>
 						<div class="input_wrap">
-								<label for="last_name">Time Departed</label>
-								<input type="text" name="Last Name" class="input" id="last_name">
+								<label for="departed">Time Departed</label>
+								<input type="text" name="Time Departed" class="input" id="departed">
 							</div>
 						</div>
 					</form>
@@ -142,15 +242,15 @@
 					<form>
 						<div class="form_container">
 							<div class="input_wrap">
-								<label for="company">Current Company</label>
-								<input type="text" name="Current Company" class="input" id="company">
+								<label for="age">Age</label>
+								<input type="text" name="Age" class="input" id="age">
 							</div>
 							<div class="input_wrap">
-								<label for="experience">Total Experience</label>
+								<label for="experience">First Name</label>
 								<input type="text" name="Total Experience" class="input" id="experience">
 							</div>
 							<div class="input_wrap">
-								<label for="designation">Designation</label>
+								<label for="designation">Last Name</label>
 								<input type="text" name="Designation" class="input" id="designation">
 							</div>
 						</div>
@@ -174,6 +274,11 @@
 					<button type="button" class="btn_done">Done</button>
 				</div>
 			</div>
+			<div class= "footer"> 
+				<div id="instruction">
+					Say 'start' to start fill up form
+				</div>
+			</div>
 		</div>
 	</div>
 	
@@ -181,7 +286,7 @@
 	<div class="shadow"></div>
 	<div class="success_wrap">
 		<span class="modal_icon"><ion-icon name="checkmark-sharp"></ion-icon></span>
-		<p>You have successfully completed the process.</p>
+		<p>You have successfully completed the process. Please, say 'end' to exit fill up form.	</p>
 	</div>
 </div>
 	</body>
