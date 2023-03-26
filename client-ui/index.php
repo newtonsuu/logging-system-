@@ -242,8 +242,8 @@
 			<div class="form_1 data_info">
 				<h2>General-Purpose Logging System Automation</h2>
 				<form>
-					<div class="form_container">
-						<div class="input_wrap">Welcome!</div>
+					<!-- <div class="form_container">
+						<div class="input_wrap">Welcome!</div> -->
 						<!-- <div id="a1" class="input_wrap">
 						Answers here
 						</div> -->

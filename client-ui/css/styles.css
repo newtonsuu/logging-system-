@@ -132,10 +132,6 @@ body{
 	border-color: var(--primary);
 }
 
-.wrapper .footer .instruction{
-	text-align: center;
-	text-size-adjust: 20px;
-}
 .wrapper .btns_wrap{
 	width: 350px;
 	max-width: 100%;
