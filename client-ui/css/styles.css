@@ -244,3 +244,27 @@ body{
 	transform: translate(-50%,-50%);
 }
 
+.wrapper .footer{
+	margin-top: 30px;
+    border-radius: 20px;
+    background-color: #6b59d3;
+    border: 1px solid black;
+}
+
+.wrapper .footer #instruction_wrapper{	
+    padding: 30px;
+}
+
+.wrapper .footer #instruction_wrapper #instruction{	
+	font-size: 25px;
+    font-weight: bold;
+    color: white;
+}
+
+#submit_form{
+	display: none;
+}
+
+.wrapper .footer #instruction_wrapper img{
+	width: 50px;
+}

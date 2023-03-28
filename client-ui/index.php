@@ -1,3 +1,42 @@
+<?php
+	// Check if post method (checking if form is submitted)
+	if ($_POST) {
+		// Get input parameters from post method
+		$address = isset($_POST['address']) ? htmlspecialchars($_POST["address"]) : "";
+		$time_arrived = isset($_POST['time_arrived']) ? htmlspecialchars($_POST["time_arrived"]) : "";
+		$time_departure = isset($_POST['time_departure']) ? htmlspecialchars($_POST["time_departure"]) : "";
+		$age = isset($_POST['age']) ? htmlspecialchars($_POST["age"]) : "";
+		$firstname = isset($_POST['firstname']) ? htmlspecialchars($_POST["firstname"]) : "";
+		$lastname = isset($_POST['lastname']) ? htmlspecialchars($_POST["lastname"]) : "";
+
+		// Get Date Today (ex. format: 20230131)
+		$today = date("Ymd");
+		// Set system path and filename for the CSV file
+		$filename = "output/LoggingSystem_" . $today . "_data.csv";
+
+		// Set Headers for CSV
+		$csv_header = "Address,Time Arrived, Time Departed, Age, First Name, Last Name\n";
+		// Set post form data for CSV
+		$csv_data = $address.",".$time_arrived.",".$time_departure.",".$age.",".$firstname.",".$lastname."\n";
+
+		// check if CSV file already exist
+		$does_file_exist = file_exists($filename);
+
+		// open CSV file (using filename variable)
+		// "a" means file opened will be updated. append data to csv
+		$csv_file = fopen($filename, "a") or die("Unable to open file!");
+
+		// if CSV file is new
+		if (!$does_file_exist) {
+			// write headers to CSV file
+			fwrite($csv_file, $csv_header);
+		}
+		// write post form data to CSV file
+		fwrite($csv_file, $csv_data);
+		// close CSV file
+		fclose($csv_file);
+	}
+?>
 <!DOCTYPE>
 <html>
 	<head>
@@ -6,7 +45,7 @@
 		<script type="module" src="js/mods.js"></script>
 		<script>
 			// const msg=[];
-			var current_step = 0; 
+			var current_step = 0;
 			var current_input_value = "";
 			window.onload = function(){
 				startSpeechRecognition();
@@ -27,7 +66,6 @@
 				speechRecognition.onresult = (event) => {
 					for (let i = event.resultIndex; i < event.results.length; ++i) {
 						if (event.results[i].isFinal) {
-							//alert(event.results[i][0].transcript.trim());
 							processRecognizedSpeech(event.results[i][0].transcript.trim());
 						}
 					}
@@ -40,20 +78,7 @@
 			function processRecognizedSpeech(recognized_speech) {
 				console.log("current step: " + current_step);
 				console.log("recognized speech: " + recognized_speech)
-				// document.querySelector('#a1').innerHTML = recognized_speech;
-				//alert("Is the data correct? " + recognized_speech);
-				// if(true){
-				// 	msg.push(recognized_speech);
-				// }
-				// else{
-					
-				// z
-				// document.querySelector("#recognized_speech").innerHTML = msg;
-				// document.querySelector("#recognized_speech").innerHTML = recognized_speech;
-				// console.log("command: " + recognized_speech);
 				
-				
-
 				switch(recognized_speech) {
 					case "start":
 						if(current_step == 0){
@@ -70,6 +95,9 @@
 							current_step = 16;
 							document.querySelector(".form_3_btns .btn_done").click();
 							document.querySelector("#instruction").innerHTML = "Thank you! ";
+							setTimeout(() => {
+								document.querySelector("#submit_form").click();
+							}, 3000);
 						}
 						break;
 					case "next":
@@ -154,19 +182,13 @@
 							document.querySelector("#instruction").innerHTML = "Please, say your lastname.";
 						}
 						break;
-					
-					// case "hello":
-					// 	document.querySelector("#response_speech").innerHTML = "Hi!";
-					// 	break;
 					case "turn blue":
-						// document.querySelector("#response_speech").innerHTML = "changing background to blue";
 						document.body.style.backgroundColor = "rgba(113, 218, 215, 1)";
 						break;
 					case "turn red":
 						document.body.style.backgroundColor = "#e75a5a";
 						break;
 					case "turn green":
-						// document.querySelector("#response_speech").innerHTML = "changing background to green";
 						document.body.style.backgroundColor = "hsla(87, 75%, 63%, 1)";
 						break;
 					default:
@@ -213,126 +235,99 @@
 		</script>
 	</head>
 	<body>
-		<!-- <span>Captured: <span id="recognized_speech"></span></span>
-		<br>
-		<span>Question: <span id="response_speech"></span></span> -->
-		
-
-	<div class="wrapper">
-		<div class="header">
-			<ul>
-				<li class="active form_1_progessbar">
-					<div>
-						<p>1</p>
-					</div>
-				</li>
-				<li class="form_2_progessbar">
-					<div>
-						<p>2</p>
-					</div>
-				</li>
-				<li class="form_3_progessbar">
-					<div>
-						<p>3</p>
-					</div>
-				</li>
-			</ul>
-		</div>
-		<div class="form_wrap">
-			<div class="form_1 data_info">
-				<h2>General-Purpose Logging System Automation</h2>
-				<form>
-					<!-- <div class="form_container">
-						<div class="input_wrap">Welcome!</div> -->
-						<!-- <div id="a1" class="input_wrap">
-						Answers here
-						</div> -->
-						<!-- <div class="input_wrap">
-							<label for="first name">First Name</label>
-							<input type="text" name="First Name" class="input" id="speech">
-						</div>
-						<div class="input_wrap">
-							<label for="password">Middle Name</label>
-							<input type="text" name="password" class="input" id="password">
-						</div>
-						<div class="input_wrap">
-							<label for="confirm_password">Last Name</label>
-							<input type="text" name="confirm password" class="input" id="confirm_password">
-						</div>  -->
-					<!-- </div> -->
-				</form>
-			</div>
-			<div class="form_2 data_info" style="display: none;">
-				<h2>Logging Info</h2>
-				<form>
-					<div class="form_container">
-						<div class="input_wrap">
-							<label for="address">Adress</label>
-							<input type="text" name="Address" class="input" id="address">
-						</div>
-						<div class="input_wrap">
-							<label for="arrived">Time Arrived</label>
-							<input type="text" name="Time Arrived" class="input" id="arrived">
-						</div>
-						<div class="input_wrap">
-								<label for="departed">Time Departed</label>
-								<input type="text" name="Time Departed" class="input" id="departed">
+		<form method = "post" action = "/project/logging-system-/client-ui/">
+			<div class="wrapper">
+				<div class="header">
+					<ul>
+						<li class="active form_1_progessbar">
+							<div>
+								<p>1</p>
 							</div>
-						</div>
-					</form>
+						</li>
+						<li class="form_2_progessbar">
+							<div>
+								<p>2</p>
+							</div>
+						</li>
+						<li class="form_3_progessbar">
+							<div>
+								<p>3</p>
+							</div>
+						</li>
+					</ul>
 				</div>
-				<div class="form_3 data_info" style="display: none;">
-					<h2>Professional Info</h2>
-					<form>
+				<div class="form_wrap">
+					<div class="form_1 data_info">
+						<h2>General-Purpose Logging System Automation</h2>
+					</div>
+					<div class="form_2 data_info" style="display: none;">
+						<h2>Logging Info</h2>
 						<div class="form_container">
 							<div class="input_wrap">
-								<label for="age">Age</label>
-								<input type="text" name="Age" class="input" id="age">
+								<label for="address">Adress</label>
+								<input type="text" name="address" class="input" id="address">
 							</div>
 							<div class="input_wrap">
-								<label for="firstname">First Name</label>
-								<input type="text" name="First Name" class="input" id="firstname">
+								<label for="arrived">Time Arrived</label>
+								<input type="text" name="time_arrived" class="input" id="arrived">
 							</div>
 							<div class="input_wrap">
-								<label for="lastname">Last Name</label>
-								<input type="text" name="Last Name" class="input" id="lastname">
+									<label for="departed">Time Departed</label>
+									<input type="text" name="time_departure" class="input" id="departed">
+								</div>
 							</div>
 						</div>
-					</form>
+						<div class="form_3 data_info" style="display: none;">
+							<h2>Professional Info</h2>
+							<div class="form_container">
+								<div class="input_wrap">
+									<label for="age">Age</label>
+									<input type="text" name="age" class="input" id="age">
+								</div>
+								<div class="input_wrap">
+									<label for="firstname">First Name</label>
+									<input type="text" name="firstname" class="input" id="firstname">
+								</div>
+								<div class="input_wrap">
+									<label for="lastname">Last Name</label>
+									<input type="text" name="lastname" class="input" id="lastname">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="btns_wrap">
+						<div class="common_btns form_1_btns">
+							<button type="button" class="btn_next">Next <span class="icon">
+								<ion-icon name="arrow-forward-sharp"></ion-icon></span></button>
+						</div>
+						<div class="common_btns form_2_btns" style="display: none;">
+							<button type="button" class="btn_back"><span class="icon">
+								<ion-icon name="arrow-back-sharp"></ion-icon></span>Back</button>
+							<button type="button" class="btn_next">Next <span class="icon">
+								<ion-icon name="arrow-forward-sharp"></ion-icon></span></button>
+						</div>
+						<div class="common_btns form_3_btns" style="display: none;">
+							<button type="button" class="btn_back"><span class="icon">
+								<ion-icon name="arrow-back-sharp"></ion-icon></span>Back</button>
+							<button type="button" class="btn_done">Done</button>
+						</div>
+					</div>
+					<div class= "footer">
+						<div id = "instruction_wrapper">
+							<img src = "img/robot.png" alt = "robot"/>
+							<span id="instruction"> Welcome! Say 'start' to start fill up form </span>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="btns_wrap">
-				<div class="common_btns form_1_btns">
-					<button type="button" class="btn_next">Next <span class="icon">
-						<ion-icon name="arrow-forward-sharp"></ion-icon></span></button>
-				</div>
-				<div class="common_btns form_2_btns" style="display: none;">
-					<button type="button" class="btn_back"><span class="icon">
-						<ion-icon name="arrow-back-sharp"></ion-icon></span>Back</button>
-					<button type="button" class="btn_next">Next <span class="icon">
-						<ion-icon name="arrow-forward-sharp"></ion-icon></span></button>
-				</div>
-				<div class="common_btns form_3_btns" style="display: none;">
-					<button type="button" class="btn_back"><span class="icon">
-						<ion-icon name="arrow-back-sharp"></ion-icon></span>Back</button>
-					<button type="button" class="btn_done">Done</button>
+			<div class="modal_wrapper">
+				<div class="shadow"></div>
+				<div class="success_wrap">
+					<span class="modal_icon"><ion-icon name="checkmark-sharp"></ion-icon></span>
+					<p>You have successfully completed the process.	</p>
 				</div>
 			</div>
-			<div class= "footer">
-				<div id="instruction">
-					Say 'start' to start fill up form
-				</div>
-			</div>
-		</div>
-	</div>
-	
-<div class="modal_wrapper">
-	<div class="shadow"></div>
-	<div class="success_wrap">
-		<span class="modal_icon"><ion-icon name="checkmark-sharp"></ion-icon></span>
-		<p>You have successfully completed the process. Please, say 'end' to exit fill up form.	</p>
-	</div>
-</div>
+			<input type = "submit" value = "submit" id = "submit_form"/>
+		</form>
 	</body>
-	<body> </div>
 </html>
